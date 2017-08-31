@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class GameDriver {
 
 	public static void main(String[] args) throws AppException, IOException {
-		File config = new File("config.txt");
+		File config = new File("conf/config1.txt");
 		Initializer init = new Initializer();
 		BoardState boardState = init.initialize(config);	
 		/**

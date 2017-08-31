@@ -84,9 +84,8 @@ public class Initializer {
 		Set<Position> posSet = new HashSet<Position>();
 		int sqrNum = (int) Math.sqrt(sqrCount);
 		for (int i = 0;i<sqrCount;i++){
-			Position pos = new Position(i+1,sqrNum,((i/sqrNum)+1),((i%sqrNum)+1));
-			posSet.add(pos);
-			Set<Construct> constructSet = conPositionMap.get(i);
+			Position pos = new Position(i+1,sqrNum,((i/sqrNum)+1),((i%sqrNum)+1));			
+			Set<Construct> constructSet = conPositionMap.get(i+1);
 			if (null!=constructSet && !constructSet.isEmpty()){
 			for (Construct con : constructSet){
 				if(con.getType().equals(ConstructType.MAGIC)){
@@ -104,25 +103,26 @@ public class Initializer {
 				}
 			 }
 			}
+			posSet.add(pos);
 		}
 		return posSet;
 	}
 	
 	private void checkNullAndAdd(Construct construct){
-		if (null==conPositionMap.get(construct.getEndPos())){
+		if (null!=construct.getEndPos() && null==conPositionMap.get(construct.getEndPos())){
 			Set<Construct> constructSet = new HashSet<Construct>();
 			constructSet.add(construct);
 			conPositionMap.put(construct.getEndPos(), constructSet);
 		}
-		else {
+		else if (null!=construct.getEndPos()){
 			conPositionMap.get(construct.getEndPos()).add(construct);
 		}
-		if (null==conPositionMap.get(construct.getStartPos())){
+		if (null!=construct.getStartPos() && null==conPositionMap.get(construct.getStartPos())){
 			Set<Construct> constructSet = new HashSet<Construct>();
 			constructSet.add(construct);
 			conPositionMap.put(construct.getStartPos(), constructSet);
 		}
-		else {
+		else if(null!=construct.getStartPos()) {
 			conPositionMap.get(construct.getStartPos()).add(construct);
 		}
 		if(null==constructMap.get(construct.getType()) ){
