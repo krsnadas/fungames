@@ -1,4 +1,4 @@
-49(number of squares)
+50(number of squares)
 2(number of players)
 S 2 8 4 (snake starting at 8 and ending at 2, with hunger level of 4)
 L 4 9 (Ladder with base at 4 and top end at 9)

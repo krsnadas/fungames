@@ -51,10 +51,10 @@ public class Navigator {
 	    if (null!=position.getConstruct()){
 	    	if (ConstructType.ELEVATOR.equals(position.getConstruct().getType())){
 	    		if(player.getIsMagicTricked()){
-	    			result = computePosition(position, playerHistory.peek(), true,false);
+	    			result = computePosition(position, dice, true,false);
 	    		}
 	    		else {
-	    			result = computePosition(position, playerHistory.peek(), true,true);
+	    			result = computePosition(position, dice, true,true);
 	    		}
 	    	}
 	    	else if (ConstructType.TRAMP.equals(position.getConstruct().getType())){

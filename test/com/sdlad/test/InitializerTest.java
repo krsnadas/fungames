@@ -8,8 +8,7 @@ import org.junit.Test;
 import com.tgt.snake.ladder.AppException;
 import com.tgt.snake.ladder.BoardState;
 import com.tgt.snake.ladder.Initializer;
-
-import junit.framework.Assert;
+import org.junit.Assert;
 
 public class InitializerTest {
 	
@@ -21,7 +20,7 @@ public class InitializerTest {
 			BoardState boardState = init.initialize(config);
 			System.out.println(boardState.getPositionStates().size());
 		} catch (AppException | IOException e) {
-			e.printStackTrace();
+			Assert.assertTrue("Exception Message matches", e.getMessage().equals(""));
 		}	
 	}
 	
@@ -32,18 +31,18 @@ public class InitializerTest {
 		try {
 			BoardState boardState = init.initialize(config);
 		} catch (AppException | IOException e) {
-			e.printStackTrace();
+			Assert.assertTrue("Exception Message matches", e.getMessage().equals("Cannot form a square"));
 		}	
 	}
 	
-	@Test
+	@Test()
 	public void testInitializeConfig3(){
 		Initializer init = new Initializer();
 		File config = new File("conf/config3.txt");
 		try {
 			BoardState boardState = init.initialize(config);
 		} catch (AppException | IOException e) {
-			
+			Assert.assertTrue("Exception Message matches", e.getMessage().equals("Cannot have multiple constructs in same square"));
 		}	
 	}
 	
@@ -54,7 +53,7 @@ public class InitializerTest {
 		try {
 			BoardState boardState = init.initialize(config);
 		} catch (AppException | IOException e) {
-			e.printStackTrace();
+			Assert.assertTrue("Exception Message matches", e.getMessage().equals("Cannot have multiple constructs in same square"));
 		}	
 	}
 }
