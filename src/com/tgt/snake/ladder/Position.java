@@ -71,8 +71,13 @@ public class Position {
 		this.energyBoost = energyBoost;
 	}
 
-	public void setConstruct(Construct construct) {
-		this.construct = construct;
+	public void setConstruct(Construct construct) throws AppException {
+		if (null==this.construct){
+			this.construct = construct;
+		}
+		else {
+			throw new AppException("Cannot have multiple constructs in same square");
+		}
 	}
 
 	public Boolean getIsMagicSqr() {

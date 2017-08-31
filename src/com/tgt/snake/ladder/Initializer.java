@@ -36,7 +36,7 @@ public class Initializer {
 		int count = 0;
 
 		for (String item : confList){
-			System.out.println(item);
+//			System.out.println(item);
 			String [] itemList = StringUtils.arraySplit(StringUtils.arraySplit(item, '(', true)[0], ' ', true);
 			if (itemList.length == 4){
 				Construct construct = new Construct(count++, ConstructType.fromString(itemList[0]),Integer.valueOf(itemList[1]),
@@ -79,7 +79,7 @@ public class Initializer {
 		return playerSet;
 	}
 	
-	private Set<Position> initPosition(Integer sqrCount){
+	private Set<Position> initPosition(Integer sqrCount) throws AppException{
 		Set<Position> posSet = new HashSet<Position>();
 		int sqrNum = (int) Math.sqrt(sqrCount);
 		for (int i = 0;i<sqrCount;i++){

@@ -9,6 +9,8 @@ import com.tgt.snake.ladder.AppException;
 import com.tgt.snake.ladder.BoardState;
 import com.tgt.snake.ladder.Initializer;
 
+import junit.framework.Assert;
+
 public class InitializerTest {
 	
 	@Test
@@ -41,7 +43,7 @@ public class InitializerTest {
 		try {
 			BoardState boardState = init.initialize(config);
 		} catch (AppException | IOException e) {
-			e.printStackTrace();
+			
 		}	
 	}
 	
