@@ -57,10 +57,10 @@ public class Navigator {
 	    	}
 	    	else if (ConstructType.TRAMP.equals(position.getConstruct().getType())){
 	    		if(player.getIsMagicTricked()){
-	    			result = position.getPosition()+dice;
+	    			result = position.getPosition()-dice;
 	    		}
 	    		else {
-	    			result = position.getPosition()-dice;
+	    			result = position.getPosition()+dice;
 	    		}
 	    	}
 	    	else if (ConstructType.LADDER.equals(position.getConstruct().getType())){

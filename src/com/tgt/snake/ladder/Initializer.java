@@ -15,10 +15,9 @@ import org.apache.commons.io.FileUtils;
 import org.h2.util.StringUtils;
 
 public class Initializer {
-
+	
 	Map<ConstructType,Set<Construct>> constructMap = new HashMap<ConstructType,Set<Construct>>();	
 	Map<Integer,Set<Construct>> conPositionMap = new HashMap<Integer,Set<Construct>>();
-	
 	Map<Integer,Stack<Integer>> moveHistory = new HashMap<Integer,Stack<Integer>>();
 	
 	public BoardState initialize(File file) throws AppException, IOException{
