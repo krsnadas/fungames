@@ -12,7 +12,7 @@ public class Navigator {
 			int finalResult = (Math.min(Math.max(result, 1), currentPos.getSqrNum()*currentPos.getSqrNum()));
 			Position resPos = boardState.getPositionStates().stream().filter(p->p.getPosition()==finalResult).findFirst().get();
 			Integer finalPosVal = processPositionAndPlayer
-						(resPos,player,move.getDice(), boardState.getMoveHistory().get(player.getId()));
+						(resPos,player,move.getDice(), boardState);
 			Position finalPos  = boardState.getPositionStates().stream().filter(p->p.getPosition()==finalPosVal).findFirst().get();
 			player.setCurrentPos(finalPos);
 			player.addToPositionStack(finalPos.getPosition());			
@@ -20,6 +20,7 @@ public class Navigator {
 		else {
 			Position initialPos  = boardState.getPositionStates().stream().filter(p->p.getPosition()==1).findFirst().get();
 			player.setCurrentPos(initialPos);
+			player.setEnergyLevel((initialPos.getSqrNum()*initialPos.getSqrNum())/3);
 			player.addToPositionStack(initialPos.getPosition());
 		}
 		boardState.getMoveHistory().get(player.getId()).push(move.getDice());		
@@ -27,8 +28,9 @@ public class Navigator {
 	}
 
 
-	private Integer processPositionAndPlayer(Position position, Player player, Integer dice, Stack<Integer> playerHistory){		
+	private Integer processPositionAndPlayer(Position position, Player player,  Integer dice, BoardState boardState){		
 		int result = -1;
+		Stack<Integer> playerHistory = boardState.getMoveHistory().get(player.getId());
 		if (position.getIsMagicSqr()){
 	    	boolean toggle = !player.getIsMagicTricked();
 	    	player.setIsMagicTricked(toggle);
@@ -64,11 +66,13 @@ public class Navigator {
 	    		}
 	    	}
 	    	else if (ConstructType.LADDER.equals(position.getConstruct().getType())){
-	    		if (!player.getIsMagicTricked() && position.getPosition() == position.getConstruct().getStartPos()){
-	    			result = position.getConstruct().getEndPos();
+	    		if (!player.getIsMagicTricked() && position.getPosition() == position.getConstruct().getStartPos()){	    				    			
+	    			result = (boardState.getPlayerStates().stream().filter(p->p.getCurrentPos().getPosition()==position.getConstruct().getEndPos()).
+	    					findAny().isPresent()) ? position.getPosition() : position.getConstruct().getEndPos();
 	    		}
 	    		else if (player.getIsMagicTricked() && position.getPosition() == position.getConstruct().getEndPos()){
-	    			result = position.getConstruct().getStartPos();
+	    			result = (boardState.getPlayerStates().stream().filter(p->p.getCurrentPos().getPosition()==position.getConstruct().getStartPos()).
+	    					findAny().isPresent()) ? position.getPosition() : position.getConstruct().getStartPos();
 	    		}
 	    	}
 	    	else if ((ConstructType.SNAKE.equals(position.getConstruct().getType()))){

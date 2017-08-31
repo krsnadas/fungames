@@ -16,7 +16,7 @@ public class GameDriver {
 		boardState.getPlayerStates().forEach(p->System.out.print("["+p.getId()+":"+p.getCurrentPos().getPosition()+":"+p.getEnergyLevel()+"], "));
 		System.out.println();
 		/**
-		 * Game Begins
+		 * Game Beginsx
 		 */
 		Navigator nav = new Navigator();
 		
@@ -41,10 +41,14 @@ public class GameDriver {
 					boardState.getPlayerStates().stream().filter(p->p.getCurrentPos().getPosition() != 
 						p.getCurrentPos().getSqrNum()*p.getCurrentPos().getSqrNum()).forEach(p->System.out.print("["+p.getId()+":"+p.getCurrentPos().getPosition()+":"+p.getEnergyLevel()+"], "));
 					System.out.println();
+					compPlayerCnt = boardState.getPlayerStates().stream().filter(p->p.getCurrentPos().getPosition() == 
+							p.getCurrentPos().getSqrNum()*p.getCurrentPos().getSqrNum()).count();
+					if(totalPlayerCnt <= compPlayerCnt+1){
+						break;
+					}
 				}
 			}
-			compPlayerCnt = boardState.getPlayerStates().stream().filter(p->p.getCurrentPos().getPosition() == 
-					p.getCurrentPos().getSqrNum()*p.getCurrentPos().getSqrNum()).count();
+			
 		}		
 	}
 }

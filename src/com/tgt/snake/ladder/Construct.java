@@ -28,7 +28,6 @@ public class Construct {
 		else if(ConstructType.LADDER.equals(type)) {
 			this.endPos = endPosHunger;			
 		}
-
 	}
 	
 	

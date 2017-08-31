@@ -19,7 +19,7 @@ public class Position {
 	private Integer colIdx;
 	
 	private Integer sqrNum;
-	
+
 	private Integer position;
 	
 	private Boolean isMagicSqr;
