@@ -32,7 +32,9 @@ public class Initializer {
 		String playerCount = StringUtils.arraySplit(configContent.get(1), '(', true)[0];	
 		String [] confList = Arrays.copyOfRange(configContent.toArray(new String[0]), 2, configContent.size());
 		int count = 0;
-
+		/**
+		 * Initialize construct
+		 */
 		for (String item : confList){
 			String [] itemList = StringUtils.arraySplit(StringUtils.arraySplit(item, '(', true)[0], ' ', true);
 			Construct construct = resourceFact.getConstruct(itemList, count);

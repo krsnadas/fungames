@@ -3,9 +3,22 @@ package com.tgt.snake.ladder;
 import java.util.Stack;
 
 public class Navigator {
-
+	/**
+	 * Navigate as per dice outcome and board rules. Returns the board state which follows the FSD.
+	 * @param move
+	 * @param boardState
+	 * @return
+	 * @throws AppException
+	 */
 	public BoardState navigate(PlayerMove move,BoardState boardState) throws AppException{
 		Player player = move.getPlayer();
+		/**
+		 * dice outcome history
+		 */
+		boardState.getMoveHistory().get(player.getId()).push(move.getDice());	
+		/**
+		 * only when energy level is greater than zero
+		 */
 		if (player.getEnergyLevel()>0){
 			Position currentPos = player.getCurrentPos();
 			int result = currentPos.getPosition()+move.getDice();
@@ -15,22 +28,34 @@ public class Navigator {
 						(resPos,player,move.getDice(), boardState);
 			Position finalPos  = boardState.getPositionStates().stream().filter(p->p.getPosition()==finalPosVal).findFirst().get();
 			player.setCurrentPos(finalPos);
+			/**
+			 * player - position history
+			 */
 			player.addToPositionStack(finalPos.getPosition());			
 		}
 		else {
 			Position initialPos  = boardState.getPositionStates().stream().filter(p->p.getPosition()==1).findFirst().get();
 			player.setCurrentPos(initialPos);
 			player.setEnergyLevel((initialPos.getSqrNum()*initialPos.getSqrNum())/3);
+			/**
+			 * player - position history
+			 */
 			player.addToPositionStack(initialPos.getPosition());
-		}
-		boardState.getMoveHistory().get(player.getId()).push(move.getDice());		
+		}	
 		return boardState;
 	}
 
-
+	/**
+	 * Process the player and position based on board rules following the dice outcome.
+	 * @param position
+	 * @param player
+	 * @param dice
+	 * @param boardState
+	 * @return
+	 */
 	private Integer processPositionAndPlayer(Position position, Player player,  Integer dice, BoardState boardState){		
 		int result = -1;
-		Stack<Integer> playerHistory = boardState.getMoveHistory().get(player.getId());
+	    ConstructExecutor conExecutor = new ConstructExecutor();
 		if (position.getIsMagicSqr()){
 	    	boolean toggle = !player.getIsMagicTricked();
 	    	player.setIsMagicTricked(toggle);
@@ -40,49 +65,20 @@ public class Navigator {
 	    	player.setEnergyLevel(energyLevel);
 	    }
 	    if (position.getIsMemory()){
-	    	int lastDice = playerHistory.peek();
-	    	if(null==player.getPositionStackatN(lastDice)){
-	    		result = 1;
-	    	}
-	    	else {
-	    		result = player.getPositionStackatN(lastDice);
-	    	}
+	    	result = conExecutor.executeMemory(position, player, boardState);
 	    }
 	    if (null!=position.getConstruct()){
 	    	if (ConstructType.ELEVATOR.equals(position.getConstruct().getType())){
-	    		if(player.getIsMagicTricked()){
-	    			result = computePosition(position, dice, true,false);
-	    		}
-	    		else {
-	    			result = computePosition(position, dice, true,true);
-	    		}
+	    		result = conExecutor.executeElevator(position, player, dice);
 	    	}
 	    	else if (ConstructType.TRAMP.equals(position.getConstruct().getType())){
-	    		if(player.getIsMagicTricked()){
-	    			result = position.getPosition()-dice;
-	    		}
-	    		else {
-	    			result = position.getPosition()+dice;
-	    		}
+	    		result = conExecutor.executeTramp(position, player, dice);
 	    	}
 	    	else if (ConstructType.LADDER.equals(position.getConstruct().getType())){
-	    		if (!player.getIsMagicTricked() && position.getPosition() == position.getConstruct().getStartPos()){	    				    			
-	    			result = (boardState.getPlayerStates().stream().filter(p->p.getCurrentPos().getPosition()==position.getConstruct().getEndPos()).
-	    					findAny().isPresent()) ? position.getPosition() : position.getConstruct().getEndPos();
-	    		}
-	    		else if (player.getIsMagicTricked() && position.getPosition() == position.getConstruct().getEndPos()){
-	    			result = (boardState.getPlayerStates().stream().filter(p->p.getCurrentPos().getPosition()==position.getConstruct().getStartPos()).
-	    					findAny().isPresent()) ? position.getPosition() : position.getConstruct().getStartPos();
-	    		}
+	    		result = conExecutor.executeLadder(position, player, boardState);
 	    	}
 	    	else if ((ConstructType.SNAKE.equals(position.getConstruct().getType()))){
-	    		if (!player.getIsMagicTricked() && position.getPosition() == position.getConstruct().getEndPos() && position.getConstruct().getHungerLevel()!=0){
-	    			result = position.getConstruct().getStartPos();
-	    			position.getConstruct().decreaseHunger();
-	    		}
-	    		else if (player.getIsMagicTricked() && position.getPosition() == position.getConstruct().getStartPos() && position.getConstruct().getHungerLevel()!=0){
-	    			result = position.getConstruct().getEndPos();
-	    		}
+	    		result = conExecutor.executeSnake(position, player, boardState);
 	    	}	    	
 	    }
     	player.decrementEnergy();
@@ -92,19 +88,6 @@ public class Navigator {
 	    else {
 			return (Math.min(Math.max(result, 1), position.getSqrNum()*position.getSqrNum()));
 	    }    
-	}
-	
-	private Integer computePosition(Position position,Integer count, Boolean isRow, Boolean increase){
-		if(isRow){
-			int rowVal = increase ? position.getRowIdx()+count : position.getRowIdx()-count;
-			int rowLimitVal = (Math.min(Math.max(rowVal, 1), position.getSqrNum()));
-			return (rowLimitVal-1)*position.getSqrNum() + position.getColIdx();
-		}
-		else {
-			int colVal = increase ? position.getColIdx()+count : position.getColIdx()-count;
-			int colLimitVal = (Math.min(Math.max(colVal, 1), position.getSqrNum()));
-			return (position.getRowIdx()-1)*position.getSqrNum() + colLimitVal;
-		}
 	}
 	
    
