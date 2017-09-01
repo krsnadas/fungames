@@ -1,7 +1,5 @@
 package com.tgt.snake.ladder;
 
-import java.util.Stack;
-
 public class Navigator {
 	/**
 	 * Navigate as per dice outcome and board rules. Returns the board state which follows the FSD.
