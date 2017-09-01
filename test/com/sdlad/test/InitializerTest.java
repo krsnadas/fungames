@@ -18,7 +18,6 @@ public class InitializerTest {
 		File config = new File("conf/config1.txt");
 		try {
 			BoardState boardState = init.initialize(config);
-			System.out.println(boardState.getPositionStates().size());
 		} catch (AppException | IOException e) {
 			Assert.assertTrue("Exception Message matches", e.getMessage().equals(""));
 		}	
